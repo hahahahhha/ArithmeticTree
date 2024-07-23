@@ -1,0 +1,6 @@
+read -sv run_verilog_mid/adder_32b_18_64_2dabb8a51a52e466a68fa69d3da3ca65.v
+hierarchy -top main
+flatten
+proc; techmap; opt;
+abc -fast -liberty NangateOpenCellLibrary_typical.lib
+write_verilog run_yosys_mid/adder_32b_18_64_2dabb8a51a52e466a68fa69d3da3ca65_yosys.v

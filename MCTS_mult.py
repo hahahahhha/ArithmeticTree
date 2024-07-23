@@ -375,43 +375,43 @@ class State(object):
             self.delay_wo = delay_wo
             self.area_wo = area_wo
             return delay, area, delay_wo, area_wo
-        verilog_file_path = "~/OpenROAD/test/mult_adder_tmp_{}.v".format(file_name_prefix)
+        verilog_file_path = os.path.expanduser("~/OpenROAD/test/mult_adder_tmp_{}.v".format(file_name_prefix))
         
         if self.error == False:
             yosys_file_name = os.path.join("run_yosys_mult_add_mid", self.verilog_file_name.split(".")[0] + "_yosys.v")
             shutil.copyfile(yosys_file_name, verilog_file_path)
-        fopen_tcl = open("~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix), "w")
+        fopen_tcl = open(os.path.expanduser("~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix)), "w")
         fopen_tcl.write(openroad_tcl.format("mult_adder_tmp_{}.v".format(file_name_prefix)))
         fopen_tcl.close()
         
         output = subprocess.check_output(['openroad',
-            "~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix)], 
-            cwd="~/OpenROAD/test").decode('utf-8')
+            os.path.expanduser("~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix))], 
+            cwd=os.path.expanduser("~/OpenROAD/test")).decode('utf-8')
         note = None
         retry = 0
         if self.error == False:
             area, delay, note = substract_results(output)
             while note is None and retry < 3:
                 output = subprocess.check_output(['openroad',
-                    "~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix)], 
-                    shell=True, cwd="~/OpenROAD/test").decode('utf-8')
+                    os.path.expanduser("~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix))], 
+                    cwd=os.path.expanduser("~/OpenROAD/test")).decode('utf-8')
                 area, delay, note = substract_results(output)
                 retry += 1
         else:
             area, delay = 1e5, 1e2
 
-        verilog_file_path = "~/OpenROAD/test/mult_tmp_{}_wo_flatten.v".format(file_name_prefix)
+        verilog_file_path = os.path.expanduser("~/OpenROAD/test/mult_tmp_{}_wo_flatten.v".format(file_name_prefix))
         
         if self.wo_error == False:
             yosys_file_name = os.path.join("run_yosys_mult_mid", self.verilog_file_name.split(".")[0] + "_wo_flatten_yosys.v")
             shutil.copyfile(yosys_file_name, verilog_file_path)
         
-            fopen_tcl = open("~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix), "w")
+            fopen_tcl = open(os.path.expanduser("~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix)), "w")
             fopen_tcl.write(openroad_tcl.format("mult_tmp_{}_wo_flatten.v".format(file_name_prefix)))
             fopen_tcl.close()
             output_wo_flatten = subprocess.check_output(['openroad',
-                "~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix)],
-                cwd="~/OpenROAD/test").decode('utf-8')
+                os.path.expanduser("~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix))],
+                cwd=os.path.expanduser("~/OpenROAD/test")).decode('utf-8')
         
         if self.wo_error == False:
             area_wo, delay_wo, note = substract_results(output_wo_flatten)
@@ -419,7 +419,7 @@ class State(object):
             area_wo, delay_wo = 1e5, 1e2
         os.remove(verilog_file_path)
         os.remove(yosys_file_name)
-        os.remove("~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix))
+        os.remove(os.path.expanduser("~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix)))
         delay *= 1000
         delay_wo *= 1000
         self.delay = delay
