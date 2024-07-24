@@ -1,6 +1,0 @@
-read -sv run_verilog_mult_mid/multiplier_16b_30b6e1f0cf06780bcf855ffb039cff5f.v
-synth -top main
-flatten
-opt
-abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 50
-write_verilog run_yosys_mult_mid/multiplier_16b_30b6e1f0cf06780bcf855ffb039cff5f_wo_flatten_yosys.v
