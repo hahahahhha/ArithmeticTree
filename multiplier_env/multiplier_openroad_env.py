@@ -47,25 +47,19 @@ endmodule
 
 yosys_script_format = \
 '''read -sv {}
-# synth -top main
-# flatten
-# opt
-# abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 5000
-hierarchy -top main
-flatten; proc; techmap; opt;
-abc -fast -liberty NangateOpenCellLibrary_typical.lib -D 5000
+synth -top main
+flatten
+opt
+abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 5000
 write_verilog {}
 '''
 
 yosys_script_wo_flatten_format = \
 '''read -sv {}
-# synth -top main
-# flatten
-# opt
-# abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 50
-hierarchy -top main
-flatten; proc; techmap; opt;
-abc -fast -liberty NangateOpenCellLibrary_typical.lib -D 50
+synth -top main
+flatten
+opt
+abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 50
 write_verilog {}
 '''
 
