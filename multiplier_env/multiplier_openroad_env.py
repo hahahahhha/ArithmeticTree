@@ -47,19 +47,25 @@ endmodule
 
 yosys_script_format = \
 '''read -sv {}
-synth -top main
-flatten
-opt
-abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 5000
+# synth -top main
+# flatten
+# opt
+# abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 5000
+hierarchy -top main
+flatten; proc; techmap; opt;
+abc -fast -liberty NangateOpenCellLibrary_typical.lib -D 5000
 write_verilog {}
 '''
 
 yosys_script_wo_flatten_format = \
 '''read -sv {}
-synth -top main
-flatten
-opt
-abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 50
+# synth -top main
+# flatten
+# opt
+# abc -fast -liberty NangateOpenCellLibrary_typical.lib -constr abc_constr -D 50
+hierarchy -top main
+flatten; proc; techmap; opt;
+abc -fast -liberty NangateOpenCellLibrary_typical.lib -D 50
 write_verilog {}
 '''
 
@@ -455,6 +461,8 @@ class MultiplierEnv(gym.Env):
             self.wo_error = True
             self.yosys_time = 0.0
 
+        os.remove(yosys_script_file_name)
+
     def run_openroad(self):
         global result_cache
         global cache_hit
@@ -503,6 +511,7 @@ class MultiplierEnv(gym.Env):
                 retry += 1
             os.remove(verilog_file_path)
             os.remove(yosys_file_name)
+            os.remove(os.path.expanduser("~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix)))
         else:
             area=1e5
             delay=1e2
@@ -518,10 +527,14 @@ class MultiplierEnv(gym.Env):
                 os.path.expanduser("~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix))],
                 cwd=os.path.expanduser("~/OpenROAD/test")).decode('utf-8')
             area_wo, delay_wo, note = substract_results(output_wo_flatten)
+            os.remove(verilog_file_path)
+            os.remove(yosys_file_name)
+            os.remove(os.path.expanduser("~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix)))
         else:
             area_wo = 1e5
             delay_wo = 1e2
 
+        
         delay *= 1000
         delay_wo *= 1000
         self.delay = delay

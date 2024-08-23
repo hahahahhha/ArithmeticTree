@@ -58,6 +58,8 @@ def get_best_file_from_ppo(strftime, input_bit):
 
 def save_mult_file(verilog_file_name, strftime):
     template_mult_name = "mult_template_{}.v".format(strftime)
+    if not os.path.exists('multiplier_template'):
+        os.mkdir('multiplier_template')
     fwrite = open(os.path.join("multiplier_template", template_mult_name), "w")
     fopen = open(os.path.join("run_verilog_mult_mid",verilog_file_name), "r")
     for line in fopen.readlines():
@@ -90,6 +92,8 @@ def get_best_file_from_mcts(strftime, input_bit):
 
 def save_adder_file(verilog_file_name, strftime, input_bit):
     template_adder_name = "adder_template_{}.v".format(strftime)
+    if not os.path.exists('adder_template'):
+        os.mkdir('adder_template')
     fwrite = open(os.path.join("adder_template", template_adder_name), "w")
     fopen = open(os.path.join("run_verilog_mult_add_mid",verilog_file_name), "r")
     cnt = 0 

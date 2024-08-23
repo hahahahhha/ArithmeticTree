@@ -354,6 +354,7 @@ class State(object):
             _ = subprocess.check_output(["yosys {}".format(yosys_script_file_name)], shell= True)
         except:
             self.wo_error = True
+        os.remove(yosys_script_file_name)
     
     def run_openroad(self):
         global result_cache
@@ -405,6 +406,11 @@ class State(object):
                 retry += 1
         else:
             area, delay = 1e5, 1e2
+        os.remove(verilog_file_path)
+        if os.path.exists(os.path.join("run_yosys_mult_add_mid", self.verilog_file_name.split(".")[0] + "_yosys.v")):
+            os.remove(os.path.join("run_yosys_mult_add_mid", self.verilog_file_name.split(".")[0] + "_yosys.v"))
+        else:
+            print(f'File {os.path.join("run_yosys_mult_add_mid", self.verilog_file_name.split(".")[0] + "_yosys.v")} doesnt exists!')
 
         verilog_file_path = os.path.expanduser("~/OpenROAD/test/mult_tmp_{}_wo_flatten.v".format(file_name_prefix))
         
@@ -412,11 +418,11 @@ class State(object):
             yosys_file_name = os.path.join("run_yosys_mult_mid", self.verilog_file_name.split(".")[0] + "_wo_flatten_yosys.v")
             shutil.copyfile(yosys_file_name, verilog_file_path)
         
-            fopen_tcl = open(os.path.expanduser("~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix)), "w")
+            fopen_tcl = open(os.path.expanduser("~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix)), "w")
             fopen_tcl.write(openroad_tcl.format("mult_tmp_{}_wo_flatten.v".format(file_name_prefix)))
             fopen_tcl.close()
             output_wo_flatten = subprocess.check_output(['openroad',
-                os.path.expanduser("~/OpenROAD/test/nangate45_mult_{}.tcl".format(file_name_prefix))],
+                os.path.expanduser("~/OpenROAD/test/nangate45_mult_adder_{}.tcl".format(file_name_prefix))],
                 cwd=os.path.expanduser("~/OpenROAD/test")).decode('utf-8')
         
         if self.wo_error == False:
