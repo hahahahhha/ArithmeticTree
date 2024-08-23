@@ -1,2 +1,8 @@
-__pycache__/
-.vscode/
+__pycache__
+.vscode
+run_*
+back_and_forth
+adder_template
+mcts_mult_adder
+mult_logs
+multiplier_template
