@@ -75,6 +75,7 @@ def get_best_file_from_mcts(strftime, input_bit):
     assert os.path.exists(file_name)
     fopen = open(file_name, "r")
     verilog_file_name = None
+    data_line=None
     best_score = 1e8
     for line in fopen.readlines():
         raw_line = line.strip()
@@ -115,8 +116,8 @@ def save_adder_file(verilog_file_name, strftime, input_bit):
 
 def main():
     input_bit = args.input_bit
-    each_iter_ppo = 900
-    each_iter_mcts = 100
+    each_iter_ppo = 9
+    each_iter_mcts = 10
     total_times = 3
     strftime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
     if not os.path.exists("back_and_forth"):
@@ -137,6 +138,7 @@ def main():
         flog.write("PPO:\t"+data_line+"\n")
         flog.flush()
         template_mult_name = save_mult_file(verilog_file_name, strftime + "-{}".format(i))
+        print(template_mult_name,template_adder_name)
         if i == 0:
             capture_subprocess_output(["python", "MCTS_mult.py", "--input_bit={}".format(input_bit * 2),
                 "--max_iter={}".format(each_iter_mcts), 
@@ -151,6 +153,7 @@ def main():
         flog.write("MCTS\t"+data_line+"\n")
         flog.flush()
         template_adder_name = save_adder_file(verilog_file_name, strftime + "-{}".format(i), input_bit * 2)
+        print(template_mult_name,template_adder_name)
         i += 1
     flog.write("time {}\n".format(time.time()-start_time))
     flog.flush()

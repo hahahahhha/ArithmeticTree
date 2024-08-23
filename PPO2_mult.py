@@ -209,6 +209,8 @@ def main():
         strftime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
     else:
         strftime = args.strftime
+    if not os.path.exists('mult_logs'):
+        os.mkdir('mult_logs')
     flog = open("mult_logs/mult_{}b_{}.log".format(args.input_bit, strftime), "w")
     cnt = 0
     for i_epoch in range(100000):

@@ -31,19 +31,25 @@ endmodule
 
 yosys_script_format = \
 '''read -sv {}
-synth -top main
-flatten
-opt
-abc -constr ./abc_constr -fast -liberty NangateOpenCellLibrary_typical.lib -D 200000
+# synth -top main
+# flatten
+# opt
+# abc -constr ./abc_constr -fast -liberty NangateOpenCellLibrary_typical.lib -D 200000
+hierarchy -top main
+flatten; proc; techmap; opt;
+abc -fast -liberty NangateOpenCellLibrary_typical.lib -D 200000
 write_verilog {}
 '''
 
 yosys_script_wo_flatten_format = \
 '''read -sv {}
-synth -top main
-flatten
-opt
-abc -constr ./abc_constr -fast -liberty NangateOpenCellLibrary_typical.lib -D 50
+# synth -top main
+# flatten
+# opt
+# abc -constr ./abc_constr -fast -liberty NangateOpenCellLibrary_typical.lib -D 50
+hierarchy -top main
+flatten; proc; techmap; opt;
+abc -fast -liberty NangateOpenCellLibrary_typical.lib -D 50
 write_verilog {}
 '''
 
@@ -511,13 +517,13 @@ class State(object):
 
             if action_type == 0:
                 next_cell_map[x, y] = 1
-                next_cell_map, next_min_map = self.legalize(next_cell_map, next_min_map, start_bit = x)
+                next_cell_map, next_min_map = self.legalize(next_cell_map, next_min_map)
             elif action_type == 1:
                 assert self.min_map[x, y] == 1
                 assert self.cell_map[x, y] == 1
                 next_cell_map[x, y] = 0
-                next_cell_map, next_min_map = self.legalize(next_cell_map, next_min_map, start_bit = x)
-            next_level_map = self.update_level_map(next_cell_map, next_level_map, start_bit = x)
+                next_cell_map, next_min_map = self.legalize(next_cell_map, next_min_map)
+            next_level_map = self.update_level_map(next_cell_map, next_level_map)
             next_level = next_level_map.max()
             next_size = next_cell_map.sum() - self.input_bit
             next_step_num = self.step_num + 1
