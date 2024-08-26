@@ -120,8 +120,8 @@ def save_adder_file(verilog_file_name, strftime, input_bit):
 
 def main():
     input_bit = args.input_bit
-    each_iter_ppo = 9
-    each_iter_mcts = 10
+    each_iter_ppo = 900
+    each_iter_mcts = 100
     total_times = 3
     strftime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
     if not os.path.exists("back_and_forth"):
